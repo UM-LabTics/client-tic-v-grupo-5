@@ -1,0 +1,6 @@
+libopenblas-dev
+liblapack-dev
+libjpeg-dev
+libtiff5-dev
+libatlas-base-dev
+libhdf5-dev
