@@ -1,0 +1,10 @@
+[Unit]
+Description=My Custom Startup Script
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/grupo5pi/project/runatboot.sh
+
+[Install]
+WantedBy=multi-user.target

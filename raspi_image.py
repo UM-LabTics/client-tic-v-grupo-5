@@ -7,7 +7,7 @@ import requests
 
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
-AWS_REGION = 'us-east-1'
+AWS_REGION = ''
 S3_BUCKET_NAME = ''
 BACKEND_URL = ''
 
@@ -44,9 +44,11 @@ def customize_image(new_image,thing_name):
         "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/root-CA.crt|to=/home/grupo5pi/certs|mkdirif",
         "--plugin", f"copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/{thing_name}.cert.pem|to=/home/grupo5pi/certs|mkdirif",
         "--plugin", f"copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/{thing_name}.private.key|to=/home/grupo5pi/certs|mkdirif",
-        "--plugin", "runatboot:script=/home/saguirregaray1/Documents/UM/tic/test/runatboot.sh|output=/home/grupo5pi/project/script.log",
+        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/runatstartup.sh|to=/home/grupo5pi/project|mkdirif",
         "--plugin", "system:service-enable=rc-local",
+        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/startup.service.sh|to=/etc/systemd/system/|mkdirif",
         "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/rc.local|to=/etc/",
+        "--plugin", "system:service-enable=startup.service",
         "--batch",
         "--expand-root",
         "--restart"
