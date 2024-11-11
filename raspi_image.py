@@ -7,7 +7,7 @@ import requests
 
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
-AWS_REGION = ''
+AWS_REGION = 'us-east-1'
 S3_BUCKET_NAME = ''
 BACKEND_URL = ''
 

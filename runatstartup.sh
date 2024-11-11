@@ -33,7 +33,8 @@ if [ -f "$SQLITE_CREATION_SCRIPT" ]; then
     python $SQLITE_CREATION_SCRIPT
 fi
 
-celery -A $PROJECT_DIR/celery_project.celery_app worker --loglevel=info
+cd $PROJECT_DIR
+celery -A celery_project worker -l info
 
 # Check if the Python script exists and run it
 echo "Run main script..."

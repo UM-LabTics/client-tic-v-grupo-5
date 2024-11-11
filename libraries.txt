@@ -1,4 +1,5 @@
 libopenblas-dev
+libopenjp2-7
 liblapack-dev
 libjpeg-dev
 libtiff5-dev
