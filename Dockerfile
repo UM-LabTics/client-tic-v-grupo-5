@@ -41,4 +41,4 @@ COPY raspi_image.py /app/script.py
 WORKDIR /app
 
 # Set the command to run your script, passing the door_id from environment variables
-CMD ["sh", "-c", "python3 script.py $DOOR_ID"]
+CMD ["sh", "-c", "python3 script.py 20"]

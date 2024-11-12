@@ -53,6 +53,7 @@ def main():
                 "door_id": door_id
             }
         }
+        sleep(3)
         mqtt_sender_task.delay(publication_topic, payload)
 
     # Failure tracking variables

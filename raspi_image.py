@@ -5,11 +5,8 @@ from uuid import uuid4
 import boto3
 import requests
 
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCESS_KEY = ''
-AWS_REGION = ''
-S3_BUCKET_NAME = ''
-BACKEND_URL = ''
+S3_BUCKET_NAME = '605134439855-us-east-1-access-pictures'
+BACKEND_URL = 'backend.grupo5.umlabs.link'
 
 def notify_backend(presigned_url, door_id):
     try:
@@ -88,9 +85,6 @@ def get_new_image_path():
 def upload_to_s3(file_path, bucket_name, object_name):
     s3_client = boto3.client(
         's3',
-        region_name=AWS_REGION,
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
     )
     try:
         print("Uploading image to S3...")
@@ -114,10 +108,7 @@ def main(door_id):
         edit_env(door_id, thing_name)
 
         iot_client = boto3.client(
-            'iot',
-            region_name=AWS_REGION,
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+            'iot'
         )
 
         response = iot_client.create_keys_and_certificate(setAsActive=True)

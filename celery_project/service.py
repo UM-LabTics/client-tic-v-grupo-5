@@ -18,6 +18,10 @@ def recognition(taken_image):
 
     known_face_encodings, known_face_doc_ids = load_known_faces()
 
+    if not known_face_encodings:
+        print("No known faces to compare with.")
+        return False, None
+
     rgb_image = cv2.cvtColor(taken_image, cv2.COLOR_BGR2RGB)
 
     # Resize image for faster processing (optional)
@@ -29,6 +33,7 @@ def recognition(taken_image):
     if not face_encodings:
         print("No faces found in the image.")
         return False, None
+
 
     face_encoding = face_encodings[0]
 
