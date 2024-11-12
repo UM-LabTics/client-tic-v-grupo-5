@@ -14,7 +14,9 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 from .celery_config import db_name, photos_path, door_id, thing_name
 
 
-def recognition(taken_image, known_face_encodings, known_face_doc_ids):
+def recognition(taken_image):
+
+    known_face_encodings, known_face_doc_ids = load_known_faces()
 
     rgb_image = cv2.cvtColor(taken_image, cv2.COLOR_BGR2RGB)
 

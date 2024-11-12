@@ -8,6 +8,7 @@ VENV_DIR="$PROJECT_DIR/venv"
 REQUIREMENTS_FILE="$PROJECT_DIR/requirements2.txt"
 PYTHON_SCRIPT="$PROJECT_DIR/main.py"
 SQLITE_CREATION_SCRIPT="$PROJECT_DIR/create_sqlite.py"
+SQLITE_DB_FILE="$PROJECT_DIR/people.db"
 
 echo "Checking virtual environment..."
 # Check if the virtual environment already exists
@@ -28,13 +29,24 @@ if [ -f "$REQUIREMENTS_FILE" ]; then
     pip install -r $REQUIREMENTS_FILE
 fi
 
-if [ -f "$SQLITE_CREATION_SCRIPT" ]; then
-    echo "Running sqlite creation script..."
-    python $SQLITE_CREATION_SCRIPT
+# Check if the SQLite database exists
+echo "Checking for SQLite database..."
+if [ -f "$SQLITE_DB_FILE" ]; then
+    echo "Database already exists, skipping creation script."
+else
+    if [ -f "$SQLITE_CREATION_SCRIPT" ]; then
+        echo "Running SQLite creation script..."
+        python $SQLITE_CREATION_SCRIPT
+    else
+        echo "SQLite creation script not found."
+    fi
 fi
 
+echo "Running celery..."
 cd $PROJECT_DIR
 celery -A celery_project worker -l info
+
+sleep 15
 
 # Check if the Python script exists and run it
 echo "Run main script..."

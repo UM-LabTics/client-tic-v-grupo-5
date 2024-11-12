@@ -1,19 +1,21 @@
 import cv2
 import os
 from time import sleep
+import logging
 
 import RPi.GPIO as GPIO
 from dotenv import load_dotenv
 
 from celery_project.service import (
-    load_known_faces,
     get_filename,
     recognition,
 )
 from datetime import datetime, timedelta
 from celery_project.tasks import mqtt_sender_task
 
-
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+logger = logging.getLogger(__name__)
 
 def main():
     load_dotenv()
@@ -53,54 +55,54 @@ def main():
         }
         mqtt_sender_task.delay(publication_topic, payload)
 
-    known_face_encodings, known_face_doc_ids = load_known_faces()
-
     # Failure tracking variables
     failure_count = 0
     first_failure_time = None
 
     try:
-        print("Press button to take picture")
+        logger.info("Press button to take picture")
         while True:
             ret, image = cam.read()
             if GPIO.input(button_pin) == GPIO.HIGH:
+                logger.info("Button pressed. Capturing image.")
                 filename = get_filename()
-                cv2.imwrite(os.path.join(photos_path, filename), image)
+                image_path = os.path.join(photos_path, filename)
+                cv2.imwrite(image_path, image)
+                logger.info(f"Image saved to {image_path}")
 
-                result, document_id = recognition(
-                    image, known_face_encodings, known_face_doc_ids
-                )
+                result, document_id = recognition(image)
 
                 send_new_access_log(result, document_id)
                 if result:
+                    logger.info(f"Recognition successful for document ID {document_id}")
                     failure_count = 0
                     first_failure_time = None
 
                     GPIO.output(relay_pin, GPIO.HIGH)
+                    logger.info("Access granted. Door opened.")
                     sleep(2)
                     GPIO.output(relay_pin, GPIO.LOW)
                 else:
+                    logger.warning("Recognition failed")
                     if first_failure_time is None:
                         first_failure_time = datetime.now()
                     failure_count += 1
 
                     if failure_count >= 3 and (datetime.now() - first_failure_time <= timedelta(minutes=1)):
                         send_alert()
+                        logger.warning("Multiple failed access attempts detected. Alert sent.")
                         failure_count = 0
                         first_failure_time = None
                     elif datetime.now() - first_failure_time > timedelta(minutes=1):
                         failure_count = 1
                         first_failure_time = datetime.now()
-
-
             else:
                 sleep(0.1)
-
     except KeyboardInterrupt:
-        print("Exiting...")
+        logger.info("Exiting...")
     finally:
         GPIO.cleanup()
         cam.release()
+
 if __name__ == "__main__":
     main()
-

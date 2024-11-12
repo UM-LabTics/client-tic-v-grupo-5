@@ -4,7 +4,8 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/home/grupo5pi/project/runatboot.sh
+User=grupo5pi
+ExecStart=/home/grupo5pi/project/runatstartup.sh
 
 [Install]
 WantedBy=multi-user.target
