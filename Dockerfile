@@ -40,7 +40,9 @@ RUN apt-get update && \
         python3 \
         python3-pip \
         python3-yaml \
-        python3-requests && \
+        python3-requests \
+        file \
+        fdisk && \
     rm -rf /var/lib/apt/lists/*
 
 # Install sdm
