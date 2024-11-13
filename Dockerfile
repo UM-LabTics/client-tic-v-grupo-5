@@ -48,4 +48,4 @@ RUN curl -L https://raw.githubusercontent.com/gitbls/sdm/master/EZsdmInstaller |
 
 
 # Run the script with a door ID as an argument
-CMD ["sh", "-c", "python task_script_testing.py $DOOR_ID"]
+CMD ["sh", "-c", "python raspi_image.py $DOOR_ID"]

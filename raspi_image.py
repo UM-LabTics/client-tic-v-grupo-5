@@ -79,7 +79,7 @@ def create_files(thing_name,certificate_pem, private_key):
 
 def get_new_image_path():
     new_file_name = f"{str(uuid4())}.img"
-    subprocess.run(['cp', 'raspberry_base.img', new_file_name], check=True)
+    subprocess.run(['cp', '/mnt/efs/test/raspberry_base.img', new_file_name], check=True)
     return new_file_name
 
 def upload_to_s3(file_path, bucket_name, object_name):
