@@ -12,7 +12,7 @@ WORKDIR /app
 COPY raspi_image.py /app
 
 # Install required Python libraries
-RUN pip install --no-cache-dir boto3 requestsgit
+RUN pip install --no-cache-dir boto3 requests git
 
 # Install dependencies for sdm
 RUN apt-get update && \

@@ -33,19 +33,19 @@ def customize_image(new_image,thing_name):
         "--plugin", "apps:apps=@baseapps.txt|name=base",
         "--plugin", "apps:apps=@pythonapps.txt|name=python",
         "--plugin", "apps:apps=@libraries.txt|name=libraries",
-        "--plugin", "copydir:from=/home/saguirregaray1/Documents/UM/tic/test/celery_project|to=/home/grupo5pi/project/",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/.env|to=/home/grupo5pi/project|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/requirements.txt|to=/home/grupo5pi/project|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/requirements2.txt|to=/home/grupo5pi/project|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/main.py|to=/home/grupo5pi/project|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/create_sqlite.py|to=/home/grupo5pi/project|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/root-CA.crt|to=/home/grupo5pi/certs|mkdirif",
-        "--plugin", f"copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/{thing_name}.cert.pem|to=/home/grupo5pi/certs|mkdirif",
-        "--plugin", f"copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/{thing_name}.private.key|to=/home/grupo5pi/certs|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/runatstartup.sh|to=/home/grupo5pi/project|mkdirif",
+        "--plugin", "copydir:from=/mnt/efs/test/celery_project|to=/home/grupo5pi/project/",
+        "--plugin", "copyfile:from=/mnt/efs/test/.env|to=/home/grupo5pi/project|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/requirements.txt|to=/home/grupo5pi/project|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/requirements2.txt|to=/home/grupo5pi/project|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/main.py|to=/home/grupo5pi/project|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/create_sqlite.py|to=/home/grupo5pi/project|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/root-CA.crt|to=/home/grupo5pi/certs|mkdirif",
+        "--plugin", f"copyfile:from=/mnt/efs/test/{thing_name}.cert.pem|to=/home/grupo5pi/certs|mkdirif",
+        "--plugin", f"copyfile:from=/mnt/efs/test/{thing_name}.private.key|to=/home/grupo5pi/certs|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/runatstartup.sh|to=/home/grupo5pi/project|mkdirif",
         "--plugin", "system:service-enable=rc-local",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/startup.service|to=/etc/systemd/system/|mkdirif",
-        "--plugin", "copyfile:from=/home/saguirregaray1/Documents/UM/tic/test/rc.local|to=/etc/",
+        "--plugin", "copyfile:from=/mnt/efs/test/startup.service|to=/etc/systemd/system/|mkdirif",
+        "--plugin", "copyfile:from=/mnt/efs/test/rc.local|to=/etc/",
         "--plugin", "system:service-enable=startup.service|name=startup",
         "--batch",
         "--expand-root",
@@ -57,10 +57,10 @@ def customize_image(new_image,thing_name):
     print("Image customization completed successfully.")
 
 def edit_env(door_id, thing_name):
-    with open('.env', 'r') as file:
+    with open('/mnt/efs/test/.env', 'r') as file:
         lines = file.readlines()
 
-    with open('.env', 'w') as file:
+    with open('/mnt/efs/test/.env', 'w') as file:
         for line in lines:
             if line.startswith('DOOR_ID='):
                 file.write(f'DOOR_ID={door_id}\n')
@@ -71,10 +71,10 @@ def edit_env(door_id, thing_name):
 
 
 def create_files(thing_name,certificate_pem, private_key):
-    with open(f'{thing_name}.cert.pem', 'w') as cert_file:
+    with open(f'/mnt/efs/test/{thing_name}.cert.pem', 'w') as cert_file:
         cert_file.write(certificate_pem)
 
-    with open(f'{thing_name}.private.key', 'w') as priv_file:
+    with open(f'/mnt/efs/test/{thing_name}.private.key', 'w') as priv_file:
         priv_file.write(private_key)
 
 def get_new_image_path():
