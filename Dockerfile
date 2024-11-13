@@ -1,44 +1,48 @@
-# Use an appropriate base image with Python 3
-FROM ubuntu:20.04
+# Use an official Python runtime as a base image
+FROM python:3.10-slim
 
-# Install system dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        python3 \
-        python3-pip \
-        sudo \
-        git \
-        qemu-utils \
-        qemu-user-static \
-        coreutils \
-        util-linux \
-        kmod \
-        dosfstools \
-        e2fsprogs \
-        udev \
-        kpartx \
-        parted \
-        lvm2 \
-        udisks2 \
-        exfat-utils
+# Set environment variables to prevent Python from writing .pyc files and buffering stdout/stderr
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
-# Install Python dependencies
-RUN pip3 install boto3 requests
-
-# Install sdm (Raspberry Pi SD Card Builder & Manager)
-RUN git clone https://github.com/gitbls/sdm.git /opt/sdm && \
-    cd /opt/sdm && \
-    chmod +x ./install && \
-    ./install
-
-# Create necessary directories for EFS mount points
-RUN mkdir -p /home/saguirregaray1/Documents/UM/tic/test/
-
-# Copy your script into the container
-COPY raspi_image.py /app/script.py
-
-# Set the working directory
+# Set working directory in the container
 WORKDIR /app
 
-# Set the command to run your script, passing the door_id from environment variables
-CMD ["sh", "-c", "python3 script.py 20"]
+# Copy the script and any necessary files to the container
+COPY raspi_image.py /app
+
+# Install required Python libraries
+RUN pip install --no-cache-dir boto3 requestsgit
+
+# Install dependencies for sdm
+RUN apt-get update && \
+    apt-get install -y \
+        sudo \
+        curl \
+        jq \
+        rsync \
+        parted \
+        dosfstools \
+        e2fsprogs \
+        qemu-user-static \
+        binfmt-support \
+        kpartx \
+        zip \
+        unzip \
+        pigz \
+        xz-utils \
+        gdisk \
+        attr \
+        libcap2-bin \
+        python3 \
+        python3-pip \
+        python3-yaml \
+        python3-requests && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install sdm
+RUN curl -L https://raw.githubusercontent.com/gitbls/sdm/master/EZsdmInstaller | bash
+
+
+# Run the script with a door ID as an argument
+CMD ["python", "raspi_image.py", "20"]
