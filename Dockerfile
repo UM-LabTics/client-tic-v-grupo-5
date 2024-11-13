@@ -11,8 +11,11 @@ WORKDIR /app
 # Copy the script and any necessary files to the container
 COPY raspi_image.py /app
 
+# Install Git as a system dependency
+RUN apt-get update && apt-get install -y git
+
 # Install required Python libraries
-RUN pip install --no-cache-dir boto3 requestsgit
+RUN pip install --no-cache-dir boto3 requests
 
 # Install dependencies for sdm
 RUN apt-get update && \
